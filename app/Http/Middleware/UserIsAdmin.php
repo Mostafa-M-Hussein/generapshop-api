@@ -17,10 +17,8 @@ class UserIsAdmin
      */
     public function handle(Request $request, Closure $next)
     {
-
         $user = Auth::user() ;
         $roles = $user-> roles ;
-
         foreach ( $roles as $role )
         {
             if ( $role['role'] == "admin" ) {

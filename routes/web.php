@@ -109,16 +109,16 @@ Route::group(['auth', 'user_is_admin'], function () {
     //Products
     Route::get('products', 'App\Http\Controllers\ProductController@index')->name('products');
 
-    Route::delete('products', 'App\Http\Controllers\ProductController@delete');
 
     Route::get('new-product', 'App\Http\Controllers\ProductController@newProduct')->name('new-product') ;
     Route::post('new-product', 'App\Http\Controllers\ProductController@store')->name('new-product') ;
 
     Route::get('update-product/{id}' ,'App\Http\Controllers\ProductController@newProduct')->name('update-product-form') ;
 
-    Route::put('products/{id}' ,'App\Http\Controllers\ProductController@update')->name('update-product') ;
+    Route::put('update-product' ,'App\Http\Controllers\ProductController@update')->name('update-product') ;
 
 
+    Route::delete('products', 'App\Http\Controllers\ProductController@delete');
 
 
 

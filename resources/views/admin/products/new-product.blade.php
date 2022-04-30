@@ -14,8 +14,8 @@
                     </div>
 
                     <form
-                        action="{{ ( !is_null ($product))  ?   route('update-product' , $product->id )  : route('new-product')   }}"
-                        method="POST" enctype="multipart/form-data">
+                        action="{{ ( !is_null ($product))  ?   route('update-product' ,  $product->id )  : route('new-product')   }}"
+                        method="post" enctype="multipart/form-data">
                         @csrf
                         <div class="card-body row">
 
@@ -129,7 +129,8 @@
                                                     </tr>
                                                     </tbody>
                                                 @endforeach
-
+                                                <input type="hidden" name="options[]"
+                                                       value="{{$optionName}}">
                                             @endforeach
                                         @endif
                                     @endif
@@ -150,13 +151,37 @@
                                             <div class="card text-center image-card-upload">
 
 
-                                                <a href="" class="">
-                                                    <i class="fas fa-minus-circle remove-image-upload"></i>
-                                                </a>
+                                                @if ( isset(   $product->images[$i] ) && !is_null($product->images[$i] ) && !empty($product->images[$i] ))
+                                                    @if ( is_null ( $product->images )   && count ( $product->images ) > 0 )
+                                                        <a href="" class="">
+                                                            <i class="fas fa-minus-circle remove-image-upload"></i>
+                                                        </a>
+                                                    @endif
+                                                    <a href="" class="" style="display: none">
+                                                        <i class="fas fa-minus-circle remove-image-upload"></i>
+                                                    </a>
+                                                @endif
+
 
                                                 <a href="#" class="activate-image-upload" data-fileid="image--{{$i}}">
+
+
+                                                    @if ( isset(   $product->images[$i] ) && !is_null($product->images[$i] ) && !empty($product->images[$i] ))
+                                                        @if ( is_null ( $product->images )   && count ( $product->images ) > 0 )
+                                                            <img id="{{'iimage-'+$i}}"
+                                                                 src="{{asset( $product->images[$i]->url )}}"
+                                                        @endif
+                                                    @endif
                                                     <div class="card-body">
-                                                        <i class="fas fa-image"> </i>
+
+                                                        @if ( isset(   $product->images[$i] ) && !is_null($product->images[$i] ) && !empty($product->images[$i] ))
+                                                            @if ( is_null ( $product->images )   && count ( $product->images ) > 0 )
+
+                                                            @endif
+                                                        @else
+                                                            <i class="fas fa-image"> </i>
+
+                                                        @endif
 
                                                     </div>
                                                 </a>
@@ -248,8 +273,25 @@
 
 @section('scripts')
     <script>
+        var optionNameList = [];
+    </script>
+
+
+    @if (  !is_null($product) )
+        @if ( !is_null($product->jsonOptions () ))
+            @foreach( $product->jsonOptions () as $optionName => $option )
+                <script>
+                    optionNameList.push('{{$optionName}}')
+                </script>
+
+            @endforeach
+        @endif
+    @endif
+    <script>
 
         $(document).ready(function () {
+            console.log(optionNameList);
+
 
             var $optionWindows = $('#options-window');
             var $addOptionBtn = $(".add-option-btn");
@@ -309,9 +351,7 @@
 
 
             $addOptionBtn.on('click', function (e) {
-
                 e.preventDefault();
-
                 $optionWindows.modal('show');
                 window.closeModal = function () {
                     $('#options-window').modal('hide');
@@ -330,7 +370,8 @@
             var optionName = $("#option_name");
             var optionValue = $("#option_value");
             var optionTable = $('#options-table');
-            var optionNameList = [];
+
+
             var optionsNameRow = "";
             if (optionName.val() === '') {
                 alert('option value is required');
@@ -380,6 +421,16 @@
 
             e.preventDefault();
 
+            $(this).parent().parent().remove();
+
+
+        })
+
+
+        $('.remove-image-upload').on ( 'click' ,  function (e) {
+
+            e.preventDefault();
+            console.log ("clicked") ;
             $(this).parent().parent().remove();
 
 

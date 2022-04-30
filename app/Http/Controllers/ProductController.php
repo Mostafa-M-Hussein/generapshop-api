@@ -29,13 +29,13 @@ class ProductController extends Controller
         $unit = Unit::all();
         $categories = Category::all();
         if (!is_null($id)) {
-            $product = Product::with(['hasUnit', 'category'])->find($id);
+            $product = Product::with(['hasUnit', 'category' , 'images'])->find($id);
 
         }
         return view('admin.products.new-product')->with([
             'product' => $product,
             'units' => $unit,
-            'categories' => $categories
+            'categories' => $categories,
 
 
         ]);
@@ -61,21 +61,9 @@ class ProductController extends Controller
     }
 
 
-    public function store(Request $request)
+    private function writeProduct(Product $product, Request $request)
     {
-        $request->validate(
-            [
 
-                'product_title' => 'required',
-                'product_description' => 'required',
-                'product_unit' => 'required',
-                'prodcut_price' => 'required',
-                'product_discount' => 'required',
-                'prodcut_total' => 'required',
-                'product_category' => 'required',
-
-            ]);
-        $product = new Product();
         $product->title = $request->input('product_title');
         $product->description = $request->input('product_description');
         $product->unit = intval($request->input('product_unit'));
@@ -84,13 +72,12 @@ class ProductController extends Controller
         $product->category_id = intval($request->input('product_category'));
         $product->discount = doubleval($request->input('product_discount'));
 
-        if ($request->has('options')) {
 
+        if ($request->has('options')) {
             $optionArray = [];
             $options = array_unique($request->input('options'));
             foreach ($options as $option) {
                 $actualOptions = $request->input($option);
-
                 $optionArray[$option] = [];
                 if (!empty($optionArray))
                     foreach ($actualOptions as $actualOption) {
@@ -102,6 +89,13 @@ class ProductController extends Controller
 
 
         }
+
+    }
+
+    public function store(Request $request)
+    {
+        $product = new Product();
+        $this->writeProduct($product, $request);
 
 
         $product->save();
@@ -127,8 +121,27 @@ class ProductController extends Controller
 
     public function update(Request $request)
     {
+        $request->validate(
+            [
 
-        dd($request);
+                'product_title' => 'required',
+                'product_description' => 'required',
+                'product_unit' => 'required',
+                'prodcut_price' => 'required',
+                'product_discount' => 'required',
+                'prodcut_total' => 'required',
+                'product_category' => 'required',
+
+            ]);
+
+
+        $product_id = $request->input("product_id");
+        $product = Product::find($product_id);
+        $this->writeProduct($product, $request);
+        $product->save();
+        Session::flash("message", "Product has been added ");
+        return back();
+
 
     }
 

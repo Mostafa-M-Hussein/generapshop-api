@@ -69,7 +69,7 @@
                                         @endif
                                         <span>
                                             <a class='btn btn-success mx-1 my-2'
-                                               href="{{route('update-product-form' , ['id' => $product->id] )}}">Update
+                                               href="{{route('update-product-form' , ["id" => $product->id ] )  }}">Update
                                             Product </a>
 
                                         <a href="" class="delete-prodcut btn btn-outline-danger"
@@ -159,20 +159,17 @@
             var deleteWindow = $("#delete-window");
             var deleteProdcut = $(".delete-prodcut");
             var message_body = $("#delete_message");
-            var prodcutId_btn = $("#product_id") ;
+            var prodcutId_btn = $("#product_id");
             deleteProdcut.on("click", function (e) {
                 e.preventDefault();
                 message_body.text("Are u sure u want to delete this product ");
                 deleteWindow.modal("show");
-                var productID = $(this).data("productid") ;
-                prodcutId_btn.val( productID ) ;
-
-
-
+                var productID = $(this).data("productid");
+                prodcutId_btn.val(productID);
 
 
             })
-            window.closeModal  = function () {
+            window.closeModal = function () {
                 $('#delete-window').modal('hide');
             }
 
