@@ -21089,6 +21089,10 @@ span.product-header-title {
   font-weight: bold;
 }
 
+a.activate-image-upload {
+  display: block;
+}
+
 .image-card-upload i.remove-image-upload {
   font-size: 2rem;
   color: red;

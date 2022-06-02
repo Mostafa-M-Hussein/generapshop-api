@@ -47,32 +47,29 @@ span.product-header-title {
 
 a.activate-image-upload {
 
-
+    display: block;
 }
 
-a.activate-image-upload:hover {
-
-}
 
 .image-card-upload {
 
 }
 
-.image-card-upload  i.remove-image-upload{
-    font-size:  2rem ;
-    color : red;
-    position:  absolute;
-    right:  5px ;
-    z-index:  99999 ;
+.image-card-upload i.remove-image-upload {
+    font-size: 2rem;
+    color: red;
+    position: absolute;
+    right: 5px;
+    z-index: 99999;
 
 }
 
 .image-card-upload i {
-    font-size:  6rem  ;
+    font-size: 6rem;
 
 }
 
 input.images-files-upload {
 
-    display : none ;
+    display: none;
 }

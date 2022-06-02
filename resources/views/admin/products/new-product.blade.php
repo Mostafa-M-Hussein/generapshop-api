@@ -62,7 +62,6 @@
 
 
                             <div class="form-group my-2">
-
                                 <label for="product_category" hidden> Product Category </label>
                                 <select class="form-control" name="product_category" id="product_category" required>
                                     <option value=""> Select a Category</option>
@@ -141,72 +140,34 @@
 
                             </div>
                             {{--Images --}}
-
-                            <div class="form-group col-md-12">
-
+                            <div class="form-group col-md-12 my-2">
                                 <div class="row">
                                     @for ( $i = 0 ; $i < 6 ; $i++ )
-                                        <div class="col-md-4 col-sm-12 mb-2 my-2">
+                                        <div class="col-md-4 col-sm-12 mb-4">
 
-                                            <div class="card text-center image-card-upload">
-
-
-                                                @if ( isset(   $product->images[$i] ) && !is_null($product->images[$i] ) && !empty($product->images[$i] ))
-                                                    @if ( is_null ( $product->images )   && count ( $product->images ) > 0 )
-                                                        <a href="" class="">
-                                                            <i class="fas fa-minus-circle remove-image-upload"></i>
-                                                        </a>
-                                                    @endif
-                                                    <a href="" class="" style="display: none">
-                                                        <i class="fas fa-minus-circle remove-image-upload"></i>
-                                                    </a>
-                                                @endif
-
-
-                                                <a href="#" class="activate-image-upload" data-fileid="image--{{$i}}">
-
-
-                                                    @if ( isset(   $product->images[$i] ) && !is_null($product->images[$i] ) && !empty($product->images[$i] ))
-                                                        @if ( is_null ( $product->images )   && count ( $product->images ) > 0 )
-                                                            <img id="{{'iimage-'+$i}}"
-                                                                 src="{{asset( $product->images[$i]->url )}}"
-                                                        @endif
-                                                    @endif
+                                            <div class="card image-card-upload text-center">
+                                                <a href="" class="activate-image-upload"   data-fileid="image-{{$i}}">
                                                     <div class="card-body">
-
-                                                        @if ( isset(   $product->images[$i] ) && !is_null($product->images[$i] ) && !empty($product->images[$i] ))
-                                                            @if ( is_null ( $product->images )   && count ( $product->images ) > 0 )
-
-                                                            @endif
-                                                        @else
-                                                            <i class="fas fa-image"> </i>
-
-                                                        @endif
-
+                                                        <i class="bi bi-image"></i>
                                                     </div>
                                                 </a>
-                                                <input class="form-control images-files-upload"
-                                                       name="product_images[]" type="file" id="image--{{$i}}">
-
+                                                <input name='product_images[]' type="file"
+                                                       class="form-control images-files-upload"
+                                                       id="image-{{$i}}">
 
                                             </div>
 
                                         </div>
                                     @endfor
                                 </div>
-
-
                             </div>
-                            {{--    END IMAGES --}}
-
-                            <div class="form-group col-md-6  my-2">
-
-                                <button type="submit" class="btn btn-outline-dark btn-block"> SAVE</button>
-
-                            </div>
-
-
                         </div>
+                        {{--    END IMAGES --}}
+
+                        <div class="form-group col-md-6  my-2">
+                            <button type="submit" class="btn btn-outline-dark btn-block"> SAVE</button>
+                        </div>
+
 
                     </form>
 
@@ -215,175 +176,142 @@
 
             </div>
 
+        </div>
 
+        @endsection
+        <div class="modal options-window" id="options-window" itabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Options </h5>
+                        <button type="button" onclick="window.closeModal() " class="close" data-dismiss="modal"
+                                aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body row">
+
+                        <div class="form-floating col-md-6">
+
+                            <input type="text" class="form-control" id="option_name" name="option_name"
+                                   placeholder="Option Name" required>
+                            <label for="option_name"> Option Name </label>
+
+                        </div>
+
+
+                        <div class="form-floating col-md-6 ">
+
+                            <input type="text" class="form-control" id="option_value" name="option_value"
+                                   placeholder="Option Value" required>
+                            <label for="option_value"> Option Value</label>
+
+
+                        </div>
+
+
+                    </div>
+
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary add-option-button">add option</button>
+                        <button type="button" onclick="window.closeModal() " class="btn btn-secondary"
+                                data-dismiss="modal">Close
+                        </button>
+                    </div>
+
+                </div>
+            </div>
         </div>
 
 
-    </div>
+        @section('scripts')
+            <script>
+                var optionNameList = [];
+            </script>
 
-    </div>
+            @if (  !is_null($product) )
+                @if ( !is_null($product->jsonOptions () ))
+                    @foreach( $product->jsonOptions () as $optionName => $option )
+                        <script>
+                            optionNameList.push('{{$optionName}}')
+                        </script>
+                    @endforeach
+                @endif
+            @endif
+            <script>
 
-@endsection
-<div class="modal options-window" id="options-window" itabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Options </h5>
-                <button type="button" onclick="window.closeModal() " class="close" data-dismiss="modal"
-                        aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-
-            <div class="modal-body row">
-
-                <div class="form-floating col-md-6">
-
-                    <input type="text" class="form-control" id="option_name" name="option_name"
-                           placeholder="Option Name" required>
-                    <label for="option_name"> Option Name </label>
-
-                </div>
+                $(document).ready(function () {
 
 
-                <div class="form-floating col-md-6 ">
+                    function readURL(input  , imageid ) {
 
-                    <input type="text" class="form-control" id="option_value" name="option_value"
-                           placeholder="Option Value" required>
-                    <label for="option_value"> Option Value</label>
+                        if ( input.files  &&  input.files[0] )
+                        {
+                            var reader = new FileReader();
+                            reader.onload = function(e) {
+                                $("#"+imageid).attr('src' , e.target.result ) ;
 
+                            };
+                            reader.readAsDataURL(input.files[0]);
+                        }
 
-                </div>
-
-
-            </div>
-
-
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-primary add-option-button">add option</button>
-                <button type="button" onclick="window.closeModal() " class="btn btn-secondary"
-                        data-dismiss="modal">Close
-                </button>
-            </div>
-
-        </div>
-    </div>
-</div>
-
-
-@section('scripts')
-    <script>
-        var optionNameList = [];
-    </script>
-
-
-    @if (  !is_null($product) )
-        @if ( !is_null($product->jsonOptions () ))
-            @foreach( $product->jsonOptions () as $optionName => $option )
-                <script>
-                    optionNameList.push('{{$optionName}}')
-                </script>
-
-            @endforeach
-        @endif
-    @endif
-    <script>
-
-        $(document).ready(function () {
-            console.log(optionNameList);
-
-
-            var $optionWindows = $('#options-window');
-            var $addOptionBtn = $(".add-option-btn");
-            var $activateImageUpload = $('.activate-image-upload');
-
-            function restFileUpload(fileUploadID, imageID, $eI, $eD) {
-
-                $('#' + imageID).attr('src', '');
-                $eI.fadeIn();
-                $eD.fadeOut();
-                fileUploadID.val('');
-
-
-            }
-
-            function readUrl(input, imageID) {
-                if (input.files && input.files[0]) {
-                    var reader = new FileReader();
-                    reader.onload = function (e) {
-
-
-                        $("#" + imageID).attr('src', e.target.result);
 
                     }
-                    reader.readAsDataURL(input.files[0]);
 
-                }
-            }
+                    var $optionWindows = $('#options-window');
+                    var $addOptionBtn = $(".add-option-btn");
+                    var $activateImageUpload = $('.activate-image-upload');
 
-            $activateImageUpload.on("click", function (e) {
 
-                e.preventDefault();
-                var fileUploadId = $(this).data("fileid");
-                var me = $(this);
-                $("#" + fileUploadId).trigger('click');
-                var imageTag = '<img class="card-img-top"  id="i' + fileUploadId + '"  src="">'
-                $(this).append(imageTag);
-
-                $("#" + fileUploadId).on('change', function (e) {
-
-                    readUrl(this, "i" + fileUploadId);
-                    me.find('i').fadeOut();
-                    var $removeThisImage = me.parent().find(".remove-image-upload");
-                    $removeThisImage.fadeIn();
-                    $removeThisImage.on("click", function (e) {
+                    //Working with images upload
+                    $activateImageUpload.on('click', function (e) {
                         e.preventDefault();
-                        restFileUpload('#' + fileUploadId, 'i' + fileUploadId, me.find('i'), $removeThisImage);
+                        var fileUploadId = $(this).data('fileid') ;
+                        $('#'+fileUploadId).trigger('click');
+                        var imagetag = '<img src="" id="i'+fileUploadId+'" class="card-img-top" >' ;
+                        $(this).append(imagetag);
+                        $('#'+fileUploadId).on('change' , function (e){
+                            readURL(this , 'i'+fileUploadId ) ;
+
+                        });
 
 
                     })
 
 
-                });
+                    $addOptionBtn.on('click', function (e) {
+                        e.preventDefault();
+                        $optionWindows.modal('show');
+                        window.closeModal = function () {
+                            $('#options-window').modal('hide');
 
 
-            })
+                        }
+
+                    })
+
+                })
 
 
-            $addOptionBtn.on('click', function (e) {
-                e.preventDefault();
-                $optionWindows.modal('show');
-                window.closeModal = function () {
-                    $('#options-window').modal('hide');
+                $(document).on('click', '.add-option-button', function (e) {
+                    e.preventDefault();
+                    var optionName = $("#option_name");
+                    var optionValue = $("#option_value");
+                    var optionTable = $('#options-table');
+                    var optionsNameRow = "";
+                    if (optionName.val() === '') {
+                        alert('option value is required');
+                        return false;
+                    }
+                    if (optionValue.val() === '') {
+                        alert('option value is required');
+                        return false;
+                    }
 
 
-                }
-
-            })
-
-
-        })
-
-
-        $(document).on('click', '.add-option-button', function (e) {
-            e.preventDefault();
-            var optionName = $("#option_name");
-            var optionValue = $("#option_value");
-            var optionTable = $('#options-table');
-
-
-            var optionsNameRow = "";
-            if (optionName.val() === '') {
-                alert('option value is required');
-                return false;
-            }
-            if (optionValue.val() === '') {
-                alert('option value is required');
-                return false;
-            }
-
-
-            var optionRow = `
+                    var optionRow = `
               <tbody>
                 <tr>
                   <td>` + optionName.val() + `</td>
@@ -397,44 +325,44 @@
               </tbody>
             `;
 
-            if (!optionNameList.includes(optionName.val())) {
-                optionNameList.push(optionName.val());
-                var optionsNameRow = `
+                    if (!optionNameList.includes(optionName.val())) {
+                        optionNameList.push(optionName.val());
+                        var optionsNameRow = `
 
                                             <td>
                                                 <input type="hidden" name="options[]" value="` + optionName.val() + `">
                                             </td>
 
                                       `
-            }
+                    }
 
-            optionTable.append(optionRow);
-            optionTable.append(optionsNameRow);
-            optionValue.val('');
-            optionName.val('');
-
-
-        })
+                    optionTable.append(optionRow);
+                    optionTable.append(optionsNameRow);
+                    optionValue.val('');
+                    optionName.val('');
 
 
-        $(document).on('click', '.remove-option', function (e) {
-
-            e.preventDefault();
-
-            $(this).parent().parent().remove();
+                })
 
 
-        })
+                $(document).on('click', '.remove-option', function (e) {
+
+                    e.preventDefault();
+
+                    $(this).parent().parent().remove();
 
 
-        $('.remove-image-upload').on ( 'click' ,  function (e) {
-
-            e.preventDefault();
-            console.log ("clicked") ;
-            $(this).parent().parent().remove();
+                })
 
 
-        })
+                $('.remove-image-upload').on('click', function (e) {
 
-    </script>
+                    e.preventDefault();
+
+                    $(this).parent().parent().remove();
+
+
+                })
+
+            </script>
 @endsection

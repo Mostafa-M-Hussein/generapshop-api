@@ -13,6 +13,7 @@ class ProductController extends Controller
 {
     public function index()
     {
+
         $products = Product::with(['category', 'images'])->paginate(env("PAGINATION_COUNT"));
         $currencyCode = env("CURRENCY_CODE", "$");
         return view('admin.products.products')->with([
@@ -29,7 +30,7 @@ class ProductController extends Controller
         $unit = Unit::all();
         $categories = Category::all();
         if (!is_null($id)) {
-            $product = Product::with(['hasUnit', 'category' , 'images'])->find($id);
+            $product = Product::with(['hasUnit', 'category', 'images'])->find($id);
 
         }
         return view('admin.products.new-product')->with([
@@ -72,48 +73,57 @@ class ProductController extends Controller
         $product->category_id = intval($request->input('product_category'));
         $product->discount = doubleval($request->input('product_discount'));
 
-
-        if ($request->has('options')) {
-            $optionArray = [];
-            $options = array_unique($request->input('options'));
-            foreach ($options as $option) {
-                $actualOptions = $request->input($option);
-                $optionArray[$option] = [];
-                if (!empty($optionArray))
-                    foreach ($actualOptions as $actualOption) {
-                        array_push($optionArray[$option], $actualOption);
-                    }
-            }
-
-            $product->options = json_encode($optionArray);
-
-
-        }
-
     }
 
     public function store(Request $request)
     {
+
+
         $product = new Product();
-        $this->writeProduct($product, $request);
+        $product->title = $request->input('product_title');
+        $product->description = $request->input('product_description');
+        $product->unit = intval($request->input('product_unit'));
+        $product->price = doubleval($request->input('prodcut_price'));
+        $product->total = doubleval($request->input('prodcut_total'));
+        $product->category_id = intval($request->input('product_category'));
+        $product->discount = doubleval($request->input('product_discount'));
+        if ($request->has('options')) {
+            $optionArray = [];
+            $options = array_unique($request->input('options'));
+            foreach ($options as $option) {
+                $optionArray[$option] = [];
+                $actualOptions = $request->input($option);
+                foreach ($actualOptions as $actualOption) {
+                    array_push($optionArray[$option], $actualOption);
 
+                }
 
-        $product->save();
-        if ($request->hasFile('product_images')) {
-            $images = $request->file('product_images');
-            foreach ($images as $image) {
-                $path = $image->store('public');
-                $image = new Image();
-                $image->url = $path;
-                $image->product_id = $product->id;
-                $image->save();
 
             }
-
+            $product->options = json_encode($optionArray);
 
         }
 
-        Session::flash("message", "Product has been added ");
+
+        $product->save();
+
+        if ($request->hasFile('product_images')) {
+            $images = $request->file('product_images');
+            $path = 'storage/public/images' ;
+
+
+            foreach ($images as $image) {
+                $URL = $image->storeAs($path  ,   $image->getClientOriginalName() );
+                $image = new Image();
+                $image->url = $URL;
+                $image->product_id = $product->id;
+                $image->save( );
+            }
+
+        }
+
+
+        Session::flash("message", "product has been added");
         return redirect(route('products'));
 
 

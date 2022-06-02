@@ -16,7 +16,7 @@
         @endif
 
         <div class="row">
-
+            <img src="storage/app/public/public/bcZDr444Gxow2gaPrJVKDImAdAgdVCYMQIviigv2.jpg" alt="">
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header bg-secondary">{{ __('Product') }}
@@ -30,25 +30,21 @@
 
 
                         <div class="row">
-
                             @foreach($products  as $product )
                                 <div class="col-md-3">
-
                                     <div class="alert alert-primary">
 
                                         <h5> {{$product->title }} </h5>
-                                        <p><strong>Category
+                                        <p><strong> Category
                                                 : </strong> {{   is_object ( $product->category  ) ?  $product->category->name : ""}}
                                         </p>
                                         <p><strong>Price : </strong> {{$product->price  }}
                                             <strong> {{$currency_code}} </strong></p>
 
 
-                                        {!! ( count ( $product->images ) >  0 ? '<img   alt="" src="'.$product->images[0]->url.'" class="img-thumbnail " />'  : null ) !!}
-
+                                            {!! ( count ( $product->images ) >  0 ? '<img   alt="" src="'.asset($product->images[0]->url ) .'" class="img-thumbnail " />'  : null ) !!}
 
                                         @if ( !is_null( $product->options  ) )
-
                                             @foreach($product->jsonOptions ()  as $key => $values )
                                                 <div class="row">
                                                     <div class="form-group col-md-12">
@@ -60,7 +56,6 @@
                                                             @endforeach
                                                         </select>
                                                     </div>
-
                                                 </div>
                                             @endforeach
 
