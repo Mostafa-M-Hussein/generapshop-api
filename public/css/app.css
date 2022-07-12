@@ -21093,12 +21093,17 @@ a.activate-image-upload {
   display: block;
 }
 
-.image-card-upload i.remove-image-upload {
-  font-size: 2rem;
+.image-card-upload a.remove-image-upload {
   color: red;
   position: absolute;
-  right: 5px;
+  font-size: 1rem;
+  top: 15px;
+  right: 15px;
   z-index: 99999;
+}
+
+.image-card-upload a.remove-image-upload i {
+  font-size: 3rem;
 }
 
 .image-card-upload i {

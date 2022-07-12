@@ -22,8 +22,7 @@
                     <div class="card-header bg-secondary">{{ __('Product') }}
 
                         <a class='btn btn-primary mx-2' href="{{route('new-product')}}"><i
-                                class="bi bi-plus-circle"></i></a>
-                    </div>
+                                class="bi bi-plus-circle"></i></a></div>
 
 
                     <div class="card-body">
@@ -42,7 +41,7 @@
                                             <strong> {{$currency_code}} </strong></p>
 
 
-                                            {!! ( count ( $product->images ) >  0 ? '<img   alt="" src="'.asset($product->images[0]->url ) .'" class="img-thumbnail " />'  : null ) !!}
+                                        {!! ( count ( $product->images ) >  0 ? '<img   alt="" src="'.asset($product->images[0]->url ) .'" class="img-thumbnail " />'  : null ) !!}
 
                                         @if ( !is_null( $product->options  ) )
                                             @foreach($product->jsonOptions ()  as $key => $values )

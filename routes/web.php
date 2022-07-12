@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers;
-
+use Illuminate\Support\Facades\Auth ;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -73,7 +73,7 @@ Route::get('/', function () {
 
 Route::get('test_email', function () {
     return "Hello";
-})->middleware(['auth', 'user_is_sup']);
+})->middleware(['auth']);
 
 Auth::routes();
 
@@ -88,7 +88,9 @@ Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 
-Route::group(['auth', 'user_is_admin'], function () {
+//TODO  IMAGE ERROR WITH CSRF
+
+Route::group( ['middleware' =>['auth' ] ]  , function () {
 
 
     //Units
@@ -116,7 +118,7 @@ Route::group(['auth', 'user_is_admin'], function () {
     Route::get('update-product/{id}' ,'App\Http\Controllers\ProductController@newProduct')->name('update-product-form') ;
 
     Route::put('update-product' ,'App\Http\Controllers\ProductController@update')->name('update-product') ;
-
+    Route::post ('delete-image' , 'App\Http\Controllers\ProductController@deleteImage')->name('delete-image') ;
 
     Route::delete('products', 'App\Http\Controllers\ProductController@delete');
 
@@ -157,4 +159,4 @@ Route::group(['auth', 'user_is_admin'], function () {
     //Shipments
 
 
-});
+}) ;
