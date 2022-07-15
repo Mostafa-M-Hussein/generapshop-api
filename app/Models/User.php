@@ -87,7 +87,7 @@ class User extends Authenticatable
 
     public function reviews()
     {
-        return $this->hasMany(Review::class );
+        return $this->hasMany(Review::class);
 
 
     }
@@ -101,11 +101,8 @@ class User extends Authenticatable
     public function FormatedName()
     {
 
-        if ( property_exists($this ,  'first_name') )
-            return "yes" ;
-            return $this->first_name . ' ' . $this-> last_name;
 
-
+        return $this->first_name . ' ' . $this->last_name;
 
 
     }

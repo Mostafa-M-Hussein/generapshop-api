@@ -114,7 +114,6 @@ class ProductController extends Controller
     public function deleteImage(Request $request)
     {
 
-
          $imageID = $request->input('image_id');
          Image::destroy($imageID);
 

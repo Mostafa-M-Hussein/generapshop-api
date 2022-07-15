@@ -26,6 +26,7 @@
                                        value="{{!is_null($product)  ? $product->title  : " "  }}" required>
                                 <label for="unit_search"> Product title </label>
 
+
                             </div>
 
 
@@ -160,9 +161,9 @@
                                                    id="removeimg-{{$i}}">
                                                     @if (  !is_null($product) && !is_null ( $product->images )   && count ( $product->images ) > 0  )
                                                         @if (isset($product->images[$i]) && !is_null($product->images[$i]) && !empty($product->images[$i]))
-                                                            '<img src="{{asset($product->images[$i]->url ) }}"
-                                                                  id="{{'iimage-'.$i}}"
-                                                                  class="card-img-top">'
+                                                            <img src="{{asset($product->images[$i]->url ) }}"
+                                                                 id="{{'iimage-'.$i}}"
+                                                                 class="card-img-top">
                                                         @endif
                                                     @endif
                                                     <div class="card-body">
@@ -269,18 +270,39 @@
         </div>
 
 
-        @section('scripts')
+        <div class="modal " id="image-window" itabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title"> DELETE </h5>
+                        <button type="button" onclick="window.closeModal() " class="close" data-dismiss="modal"
+                                aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
 
+                    <div class="modal-body row"></div>
+
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary  delete-image-btn">confirm</button>
+                        <button type="button" onclick="window.closeModal() " class="btn btn-secondary"
+                                data-dismiss="modal">Close
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+        @section('scripts')
 
 
             <script>
                 var optionNameList = [];
             </script>
 
-            <script>
-                var imageDelete = '{!!  url(route('delete-image')) !!}';
-
-            </script>
             @if (  !is_null($product) )
                 @if ( !is_null($product->jsonOptions () ))
                     @foreach( $product->jsonOptions () as $optionName => $option )
@@ -308,7 +330,7 @@
                     }
 
                     function resetFileUpload(fileUploadId, imageID, $eI, $eD) {
-                        console.log()
+
                         $("#" + imageID).attr('src', '').remove();
                         $("#" + fileUploadId).val('');
                         $eI.fadeIn();
@@ -321,6 +343,8 @@
 
 
                     var $optionWindows = $('#options-window');
+                    var $ImageWindow = $('#image-window');
+
                     var $addOptionBtn = $(".add-option-btn");
                     var $activateImageUpload = $('.activate-image-upload');
 
@@ -341,38 +365,51 @@
                             $removeThisImage.on('click', function (e) {
                                 e.preventDefault();
                                 resetFileUpload(fileUploadId, 'i' + fileUploadId, $me.find('i'), $removeThisImage);
+
+
                             })
 
                         });
 
 
                     })
-
-
                     $('.remove-image-upload').on('click', function (e) {
                         e.preventDefault();
                         var $me = $(this);
+
                         var imageID = $me.data('imageid');
-
-                        var fileUploadId = $(this).data('fileid');
-                        var removeID = $(this).data('removeimg');
                         var $removeThisImage = $me.parent().find(".remove-image-upload");
-                        resetFileUpload(fileUploadId, 'i' + fileUploadId, $("#" + removeID).find('i'), $removeThisImage);
+                        var fileUploadId = $(this).data('fileid');
+                        $('.delete-image-btn').data('ed', $removeThisImage);
+                        $('.delete-image-btn').data('fileid', fileUploadId);
+                        $('.delete-image-btn').data('imageid', imageID);
+                        $ImageWindow.show('modal');
 
+                    })
+
+
+                    $(document).on("click", ".delete-image-btn", function (e) {
+                        e.preventDefault();
+                        var removeID = $(this).data('removeimg');
+                        var imageID = $(this).data('imageid');
+                        var $removeThisImage = $(this).data('ed');
+                        var fileUploadId = $(this).data('fileid');
+                        resetFileUpload(fileUploadId, 'i' + fileUploadId, $("#" + removeID).find('i'), $removeThisImage);
                         $.ajax({
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
                             url: "{{route( 'delete-image' )}}",
                             data: {
-                                image_id : imageID,
+                                image_id: imageID,
 
                             },
 
                             method: "post",
                             dataType: "json",
                             success: function (data) {
-                                console.log(data);
+                                var Data = data.responseJSON;
+                                console.log(Data);
 
                             },
                             error: function (data) {
@@ -382,9 +419,16 @@
 
 
                         });
+                        $ImageWindow.modal('hide');
 
 
-                    })
+                    });
+                    //ToDo remove close modal btn fix error
+                    window.closeModal = function () {
+                        $('#image-window').modal('hide');
+
+
+                    }
 
                     $addOptionBtn.on('click', function (e) {
                         e.preventDefault();

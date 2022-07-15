@@ -21,8 +21,9 @@
 
                                     <div class="alert alert-primary">
                                         {{--       Error Here                                   --}}
-                                        {{--                                        <p><strong>title : </strong>{{$review->customer->first_name }}  </p>--}}
+                                        <p><strong>customer name  : </strong>{{$review->customer->FormatedName() }}  </p>
                                         <p><strong>title : </strong>{{$review->product->title }}  </p>
+
                                         <p><strong>reviews : </strong>{{$review->review }}  </p>
                                         <p><strong>Date : </strong>{{ $review-> humanFormattedDate()  }}  </p>
 
