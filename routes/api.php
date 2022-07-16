@@ -28,15 +28,14 @@ Route::get('/products/{id}' ,  'App\Http\Controllers\Api\ProductController@show'
 
 
 //Genral Route
-Route::get('/users' ,  function ()
-{
-    return \App\Http\Resources\UserFullResource::collection(\App\Models\User::paginate()  ) ;
-
-}) ;
 
 Route::get('/countries' ,  'App\Http\Controllers\Api\CountryController@index' ) ;
 Route::get('/countries/{id}/states' ,  'App\Http\Controllers\Api\CountryController@showStates' ) ;
 Route::get('/countries/{id}/cities' ,  'App\Http\Controllers\Api\CountryController@showCities' ) ;
+
+Route::post('/auth/register' ,  'App\Http\Controllers\Api\AuthController@register' ) ;
+
+Route::post('/auth/login' ,  'App\Http\Controllers\Api\AuthController@login' ) ;
 
 Route::group(['middleware' => ['auth:sanctum'] ], function ()
 {
