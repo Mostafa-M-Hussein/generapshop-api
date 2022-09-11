@@ -51,15 +51,20 @@ class AuthController extends Controller
         ]);
         $user = new User();
 
-
         $user->first_name = $request->input('first_name');
         $user->last_name = $request->input('last_name');
         $user->email = $request->input('email');
         $user->password = Hash::make($request->input('password'));
         $user->api_token = bin2hex(openssl_random_pseudo_bytes(30));
         $user->save();
-
-
         return new UserApiResource($user);
+
+
+
     }
+
+
+
+
+
 }
